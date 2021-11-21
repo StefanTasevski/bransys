@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/pop_up_size"
+    android:layout_height="@dimen/pop_up_size"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="@dimen/pop_up_size"
+            android:layout_height="@dimen/pop_up_size"
+            android:gravity="center"
+            android:orientation="vertical">
+
+        <TextView
+            android:labelFor="@id/edit_text_id"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:text="@string/set_the_cache_timeout"/>
+
+        <EditText android:id="@+id/edit_text_id"
+            android:layout_width="@dimen/edit_text_width"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/edit_text_margin_top"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:autofillHints="" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/submit_button"
+            android:layout_width="wrap_content"
+            app:cornerRadius="@dimen/corner_radius"
+            android:layout_gravity="center"
+            android:padding="@dimen/button_padding"
+            android:text="@string/submit"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.button.MaterialButton>
+
+        </LinearLayout>
+
+</RelativeLayout>

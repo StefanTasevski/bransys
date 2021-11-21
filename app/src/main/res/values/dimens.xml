@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="recycler_view_padding">4dp</dimen>
+    <dimen name="error_message_padding">8dp</dimen>
+    <dimen name="separator_height">1dp</dimen>
+    <dimen name="list_element_margin_start">12dp</dimen>
+    <dimen name="list_element_padding">4dp</dimen>
+    <dimen name="pop_up_size">200dp</dimen>
+    <dimen name="edit_text_width">100dp</dimen>
+    <dimen name="edit_text_margin_top">20dp</dimen>
+    <dimen name="corner_radius">100dp</dimen>
+    <dimen name="button_padding">10dp</dimen>
+</resources>

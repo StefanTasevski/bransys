@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Bransys Task</string>
+    <string name="set_the_cache_timeout">Set the cache timeout</string>
+    <string name="settings">Settings</string>
+    <string name="submit">Submit</string>
+</resources>
