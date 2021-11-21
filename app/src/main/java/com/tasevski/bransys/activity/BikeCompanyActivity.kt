@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,15 +16,16 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasevski.bransys.R
+import com.tasevski.bransys.adapter.BikeCompaniesAdapter
 import com.tasevski.bransys.databinding.ActivityBinding
 import com.tasevski.bransys.databinding.PopUpBinding
-import com.tasevski.bransys.adapter.BikeCompaniesAdapter
 import com.tasevski.bransys.util.Resource
 import com.tasevski.bransys.view_model.BikeCompaniesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
 
 @AndroidEntryPoint
 class BikeCompanyActivity : AppCompatActivity() {
@@ -33,6 +36,15 @@ class BikeCompanyActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.custom_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
+    private fun isNetworkAvailable(context: Context) =
+        (context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).run {
+            getNetworkCapabilities(activeNetwork)?.run {
+                hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                        || hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                        || hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+            } ?: false
+        }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val dialog = Dialog(this)
@@ -55,12 +67,21 @@ class BikeCompanyActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun checkExpiredData() {
-        if(prefs?.contains("timestamp") == true) {
-            if(LocalDateTime.parse(prefs?.getString("timestamp", LocalDateTime.MIN.format(
-                    DateTimeFormatter.ISO_DATE_TIME)), DateTimeFormatter.ISO_DATE_TIME).plusMinutes(prefs?.getLong("time", "15".toLong()) ?: "15".toLong()).isBefore(LocalDateTime.now())) {
-                lifecycleScope.launch {
-                    viewModel.deleteAll()
+    private fun checkExpiredData(context: Context) {
+        if(isNetworkAvailable(context)) {
+            if (prefs?.contains("timestamp") == true) {
+                if (LocalDateTime.parse(
+                        prefs?.getString(
+                            "timestamp", LocalDateTime.MIN.format(
+                                DateTimeFormatter.ISO_DATE_TIME
+                            )
+                        ), DateTimeFormatter.ISO_DATE_TIME
+                    ).plusMinutes(prefs?.getLong("time", "15".toLong()) ?: "15".toLong())
+                        .isBefore(LocalDateTime.now())
+                ) {
+                    lifecycleScope.launch {
+                        viewModel.deleteAll()
+                    }
                 }
             }
         }
@@ -77,7 +98,7 @@ class BikeCompanyActivity : AppCompatActivity() {
 
         val bikeCompaniesAdapter = BikeCompaniesAdapter()
         prefs = getSharedPreferences("Prefs", Context.MODE_PRIVATE)
-        checkExpiredData()
+        checkExpiredData(this)
         binding.apply {
             recyclerView.apply {
                 adapter = bikeCompaniesAdapter
